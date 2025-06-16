@@ -1,0 +1,177 @@
+{
+  "user": [
+    {
+      "id_user": 1,
+      "email": "admin@apotek.com",
+      "password": "admin123",
+      "role": "admin",
+      "nama": "Administrator",
+      "created_at": "2025-01-13T10:00:00Z",
+      "id": "5f58"
+    },
+    {
+      "id_user": 2,
+      "email": "user1@apotek.com",
+      "password": "user123",
+      "role": "user",
+      "nama": "John Doe",
+      "created_at": "2025-01-13T10:30:00Z",
+      "id": "4c5d"
+    },
+    {
+      "id_user": 3,
+      "email": "user2@apotek.com",
+      "password": "user123",
+      "role": "user",
+      "nama": "Jane Smith",
+      "created_at": "2025-01-13T11:00:00Z",
+      "id": "84df"
+    },
+    {
+      "id": "33c0",
+      "nama": "Kean Owen",
+      "email": "keanowen@gmail.com",
+      "password": "123456",
+      "role": "user",
+      "created_at": "2025-06-15T11:53:20.814Z"
+    },
+    {
+      "id": "ec61",
+      "nama": "Regent Wibisono",
+      "email": "regent@gmail.com",
+      "password": "123456",
+      "role": "admin",
+      "created_at": "2025-06-15T11:53:41.946Z"
+    }
+  ],
+  "obat": [
+    {
+      "id_obat": 1,
+      "nama_obat": "Paracetamol",
+      "stok": 50,
+      "harga": 5000,
+      "deskripsi": "Obat penurun demam dan pereda nyeri yang aman untuk dewasa dan anak-anak",
+      "foto": "https://images.pexels.com/photos/3786123/pexels-photo-3786123.jpeg?auto=compress&cs=tinysrgb&w=300",
+      "kategori": "Analgesik",
+      "expired": "2026-12-31",
+      "id": "9b30"
+    },
+    {
+      "id_obat": 2,
+      "nama_obat": "Amoxicillin",
+      "stok": 30,
+      "harga": 10000,
+      "deskripsi": "Antibiotik spektrum luas untuk mengatasi berbagai infeksi bakteri",
+      "foto": "https://images.pexels.com/photos/3786160/pexels-photo-3786160.jpeg?auto=compress&cs=tinysrgb&w=300",
+      "kategori": "Antibiotik",
+      "expired": "2026-06-30",
+      "id": "6e2e"
+    },
+    {
+      "id_obat": 3,
+      "nama_obat": "Omeprazole",
+      "stok": 25,
+      "harga": 15000,
+      "deskripsi": "Obat untuk mengatasi asam lambung berlebih dan tukak lambung",
+      "foto": "https://images.pexels.com/photos/3786164/pexels-photo-3786164.jpeg?auto=compress&cs=tinysrgb&w=300",
+      "kategori": "Antasida",
+      "expired": "2026-08-15",
+      "id": "c9f2"
+    },
+    {
+      "id_obat": 4,
+      "nama_obat": "Cetirizine",
+      "stok": 40,
+      "harga": 8000,
+      "deskripsi": "Antihistamin untuk mengatasi reaksi alergi dan gatal-gatal",
+      "foto": "https://images.pexels.com/photos/3786170/pexels-photo-3786170.jpeg?auto=compress&cs=tinysrgb&w=300",
+      "kategori": "Antihistamin",
+      "expired": "2026-10-20",
+      "id": "79aa"
+    },
+    {
+      "id": "a3ee",
+      "nama_obat": "Bodrex",
+      "stok": "Tersedia",
+      "harga": 13500,
+      "deskripsi": "Obat Sakit Kepala",
+      "foto": "https://d2qjkwm11akmwu.cloudfront.net/products/147272_10-5-2022_14-56-39-1665791232.png"
+    }
+  ],
+  "penyakit": [
+    {
+      "id_penyakit": 1,
+      "nama_penyakit": "Demam",
+      "deskripsi": "Kondisi ketika suhu tubuh meningkat di atas normal (37°C), biasanya sebagai respons terhadap infeksi atau peradangan",
+      "gejala": [
+        "Suhu tubuh tinggi",
+        "Menggigil",
+        "Sakit kepala",
+        "Lemas"
+      ],
+      "pencegahan": "Menjaga kebersihan, istirahat cukup, minum air putih",
+      "id": "c8fc"
+    },
+    {
+      "id_penyakit": 2,
+      "nama_penyakit": "Infeksi Bakteri",
+      "deskripsi": "Kondisi ketika bakteri berbahaya masuk ke dalam tubuh dan berkembang biak, menyebabkan peradangan dan gangguan fungsi organ",
+      "gejala": [
+        "Demam",
+        "Nyeri",
+        "Bengkak",
+        "Kemerahan"
+      ],
+      "pencegahan": "Menjaga kebersihan, mencuci tangan, menghindari kontak dengan penderita",
+      "id": "fe1b"
+    },
+    {
+      "id_penyakit": 3,
+      "nama_penyakit": "Asam Lambung",
+      "deskripsi": "Kondisi ketika asam lambung naik ke kerongkongan, menyebabkan rasa terbakar dan nyeri di dada",
+      "gejala": [
+        "Nyeri ulu hati",
+        "Mual",
+        "Kembung",
+        "Rasa terbakar di dada"
+      ],
+      "pencegahan": "Makan teratur, hindari makanan pedas dan asam, tidak langsung tidur setelah makan",
+      "id": "8baf"
+    },
+    {
+      "id_penyakit": 4,
+      "nama_penyakit": "Alergi",
+      "deskripsi": "Reaksi sistem kekebalan tubuh terhadap zat yang sebenarnya tidak berbahaya",
+      "gejala": [
+        "Gatal-gatal",
+        "Ruam kulit",
+        "Bersin-bersin",
+        "Mata berair"
+      ],
+      "pencegahan": "Menghindari alergen, menjaga kebersihan lingkungan",
+      "id": "64f2"
+    }
+  ],
+  "obat_penyakit": [
+    {
+      "id": "1",
+      "id_obat": 1,
+      "id_penyakit": 1
+    },
+    {
+      "id": "2",
+      "id_obat": 2,
+      "id_penyakit": 2
+    },
+    {
+      "id": "3",
+      "id_obat": 3,
+      "id_penyakit": 3
+    },
+    {
+      "id": "4",
+      "id_obat": 4,
+      "id_penyakit": 4
+    }
+  ]
+}

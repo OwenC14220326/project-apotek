@@ -5,11 +5,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { obatAPI, penyakitAPI } from '@/lib/api';
-import { 
-  Pill, 
-  Heart, 
-  Search, 
+import { Obat, obatAPI, penyakitAPI } from '@/lib/api';
+import {
+  Pill,
+  Heart,
+  Search,
   Stethoscope,
   Activity,
   TrendingUp,
@@ -23,7 +23,8 @@ export default function UserHomePage() {
     totalPenyakit: 0,
     availableStock: 0
   });
-  const [recentObat, setRecentObat] = useState([]);
+
+  const [recentObat, setRecentObat] = useState<Obat[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -204,13 +205,12 @@ export default function UserHomePage() {
                         <span className="text-lg font-bold text-blue-600">
                           Rp {obat.harga.toLocaleString('id-ID')}
                         </span>
-                        <span className={`text-sm px-2 py-1 rounded-full ${
-                          obat.stok > 10 
-                            ? 'bg-green-100 text-green-800' 
-                            : obat.stok > 0 
-                            ? 'bg-yellow-100 text-yellow-800'
-                            : 'bg-red-100 text-red-800'
-                        }`}>
+                        <span className={`text-sm px-2 py-1 rounded-full ${obat.stok > 10
+                            ? 'bg-green-100 text-green-800'
+                            : obat.stok > 0
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}>
                           Stok: {obat.stok}
                         </span>
                       </div>

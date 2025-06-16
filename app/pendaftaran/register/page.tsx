@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Pill, Mail, Lock, User, Eye, EyeOff } from 'lucide-react';
@@ -16,15 +17,17 @@ export default function RegisterPage() {
     nama: '',
     email: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   });
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   const { register } = useAuth();
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,11 +48,18 @@ export default function RegisterPage() {
     try {
       const success = await register(formData.email, formData.password, formData.nama);
       if (success) {
-        router.push('/user/home');
+        toast({
+          title: 'Berhasil',
+          description: 'Email berhasil terdaftar. Anda akan diarahkan...',
+        });
+
+        setTimeout(() => {
+          router.push('/user/home');
+        }, 1500); // kasih delay 1.5 detik agar toast terlihat
       } else {
         setError('Email sudah terdaftar atau terjadi kesalahan');
       }
-    } catch (error) {
+    } catch (err) {
       setError('Terjadi kesalahan saat registrasi');
     } finally {
       setIsLoading(false);
@@ -59,7 +69,7 @@ export default function RegisterPage() {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -83,6 +93,7 @@ export default function RegisterPage() {
               Lengkapi form di bawah untuk membuat akun
             </CardDescription>
           </CardHeader>
+
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">

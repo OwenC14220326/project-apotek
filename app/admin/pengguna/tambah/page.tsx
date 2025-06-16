@@ -15,17 +15,31 @@ import { UserPlus, ArrowLeft, Mail, User, Lock, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function TambahPenggunaPage() {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    nama: string;
+    email: string;
+    password: string;
+    role: 'user' | 'admin';
+  }>({
     nama: '',
     email: '',
     password: '',
-    role: 'user'
+    role: 'user',
   });
+
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   const router = useRouter();
   const { toast } = useToast();
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,34 +49,27 @@ export default function TambahPenggunaPage() {
     try {
       const newUser = {
         ...formData,
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
       };
 
       await userAPI.create(newUser);
-      
+
       toast({
-        title: "Berhasil",
-        description: "Pengguna baru berhasil ditambahkan",
+        title: 'Berhasil',
+        description: 'Pengguna baru berhasil ditambahkan',
       });
-      
+
       router.push('/admin/pengguna');
     } catch (error) {
       setError('Gagal menambahkan pengguna baru');
       toast({
-        title: "Error",
-        description: "Gagal menambahkan pengguna baru",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Gagal menambahkan pengguna baru',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
   };
 
   return (
@@ -88,6 +95,7 @@ export default function TambahPenggunaPage() {
             </p>
           </div>
 
+          {/* Form */}
           <Card>
             <CardHeader>
               <CardTitle>Informasi Pengguna</CardTitle>
@@ -148,7 +156,12 @@ export default function TambahPenggunaPage() {
 
                 <div className="space-y-2">
                   <Label htmlFor="role">Role Pengguna</Label>
-                  <Select value={formData.role} onValueChange={(value) => setFormData({...formData, role: value})}>
+                  <Select
+                    value={formData.role}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, role: value as 'admin' | 'user' })
+                    }
+                  >
                     <SelectTrigger>
                       <div className="flex items-center">
                         <Shield className="h-4 w-4 mr-2 text-gray-400" />

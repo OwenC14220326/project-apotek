@@ -1,42 +1,25 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { ProtectedRoute } from '@/components/layout/protected-route';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from '@/components/ui/table';
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+  AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogHeader,
+  AlertDialogTitle, AlertDialogDescription, AlertDialogFooter,
+  AlertDialogCancel, AlertDialogAction,
 } from '@/components/ui/alert-dialog';
-import Link from 'next/link';
-import { userAPI } from '@/lib/api';
+import { Badge } from '@/components/ui/badge';
+import { userAPI, UserData } from '@/lib/api';
 import { Users, Plus, Search, Edit, Trash2, Shield, User } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-interface UserData {
-  id_user: number;
-  email: string;
-  nama: string;
-  role: 'admin' | 'user';
-  created_at: string;
-}
+
 
 export default function PenggunaPage() {
   const [users, setUsers] = useState<UserData[]>([]);
@@ -50,7 +33,7 @@ export default function PenggunaPage() {
   }, []);
 
   useEffect(() => {
-    const filtered = users.filter(user =>
+    const filtered = users.filter((user) =>
       user.nama.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -59,32 +42,29 @@ export default function PenggunaPage() {
 
   const fetchUsers = async () => {
     try {
-      const data = await userAPI.getAll();
+      const data = await userAPI.getAll(); // Firebase version
       setUsers(data);
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Gagal memuat data pengguna",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Gagal memuat data pengguna',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     try {
       await userAPI.delete(id);
-      setUsers(users.filter(user => user.id_user !== id));
-      toast({
-        title: "Berhasil",
-        description: "Pengguna berhasil dihapus",
-      });
+      setUsers((prev) => prev.filter((u) => u.id !== id));
+      toast({ title: 'Berhasil', description: 'Pengguna berhasil dihapus' });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Gagal menghapus pengguna",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Gagal menghapus pengguna',
+        variant: 'destructive',
       });
     }
   };
@@ -107,11 +87,10 @@ export default function PenggunaPage() {
               <Users className="h-8 w-8 text-blue-600" />
               <h1 className="text-3xl font-bold text-gray-900">Kelola Pengguna</h1>
             </div>
-            <p className="text-gray-600">
-              Manage semua pengguna yang terdaftar dalam sistem
-            </p>
+            <p className="text-gray-600">Manage semua pengguna yang terdaftar dalam sistem</p>
           </div>
 
+          {/* Card */}
           <Card>
             <CardHeader>
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
@@ -135,6 +114,7 @@ export default function PenggunaPage() {
                 </div>
               </div>
             </CardHeader>
+
             <CardContent>
               {filteredUsers.length > 0 ? (
                 <div className="overflow-x-auto">
@@ -150,7 +130,7 @@ export default function PenggunaPage() {
                     </TableHeader>
                     <TableBody>
                       {filteredUsers.map((user) => (
-                        <TableRow key={user.id_user}>
+                        <TableRow key={user.id}>
                           <TableCell className="font-medium">
                             <div className="flex items-center space-x-2">
                               {user.role === 'admin' ? (
@@ -172,12 +152,8 @@ export default function PenggunaPage() {
                           </TableCell>
                           <TableCell className="text-right">
                             <div className="flex justify-end space-x-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                asChild
-                              >
-                                <Link href={`/admin/pengguna/edit/${user.id_user}`}>
+                              <Button variant="outline" size="sm" asChild>
+                                <Link href={`/admin/pengguna/edit/${user.id}`}>
                                   <Edit className="h-4 w-4" />
                                 </Link>
                               </Button>
@@ -191,14 +167,14 @@ export default function PenggunaPage() {
                                   <AlertDialogHeader>
                                     <AlertDialogTitle>Konfirmasi Hapus</AlertDialogTitle>
                                     <AlertDialogDescription>
-                                      Apakah Anda yakin ingin menghapus pengguna "{user.nama}"? 
+                                      Apakah Anda yakin ingin menghapus pengguna "{user.nama}"?
                                       Tindakan ini tidak dapat dibatalkan.
                                     </AlertDialogDescription>
                                   </AlertDialogHeader>
                                   <AlertDialogFooter>
                                     <AlertDialogCancel>Batal</AlertDialogCancel>
                                     <AlertDialogAction
-                                      onClick={() => handleDelete(user.id_user)}
+                                      onClick={() => handleDelete(user.id!)}
                                       className="bg-red-600 hover:bg-red-700"
                                     >
                                       Hapus
@@ -220,10 +196,9 @@ export default function PenggunaPage() {
                     {searchTerm ? 'Pengguna tidak ditemukan' : 'Belum ada pengguna'}
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    {searchTerm 
+                    {searchTerm
                       ? 'Coba ubah kata kunci pencarian Anda.'
-                      : 'Mulai dengan menambahkan pengguna baru ke sistem.'
-                    }
+                      : 'Mulai dengan menambahkan pengguna baru ke sistem.'}
                   </p>
                   {!searchTerm && (
                     <Button asChild>

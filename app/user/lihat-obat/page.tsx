@@ -7,19 +7,9 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { obatAPI } from '@/lib/api';
+import { obatAPI, Obat } from '@/lib/api';
 import { Pill, Search, Filter, AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
 
-interface Obat {
-  id_obat: number;
-  nama_obat: string;
-  stok: number;
-  harga: number;
-  deskripsi: string;
-  foto: string;
-  kategori: string;
-  expired: string;
-}
 
 export default function LihatObatPage() {
   const [obat, setObat] = useState<Obat[]>([]);
@@ -55,8 +45,7 @@ export default function LihatObatPage() {
     if (searchTerm) {
       filtered = filtered.filter(item =>
         item.nama_obat.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.deskripsi.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.kategori.toLowerCase().includes(searchTerm.toLowerCase())
+        item.deskripsi.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -67,11 +56,11 @@ export default function LihatObatPage() {
 
     // Filter by stock status
     if (stockFilter === 'available') {
-      filtered = filtered.filter(item => item.stok > 0);
+      filtered = filtered.filter(item => parseInt(item.stok) > 0);
     } else if (stockFilter === 'low') {
-      filtered = filtered.filter(item => item.stok > 0 && item.stok <= 10);
+      filtered = filtered.filter(item => parseInt(item.stok) > 0 && parseInt(item.stok) <= 10);
     } else if (stockFilter === 'empty') {
-      filtered = filtered.filter(item => item.stok === 0);
+      filtered = filtered.filter(item => parseInt(item.stok) === 0);
     }
 
     setFilteredObat(filtered);
@@ -82,8 +71,6 @@ export default function LihatObatPage() {
     if (stok <= 10) return { label: 'Stok Rendah', color: 'bg-yellow-100 text-yellow-800', icon: AlertTriangle };
     return { label: 'Tersedia', color: 'bg-green-100 text-green-800', icon: CheckCircle };
   };
-
-  const categories = [...new Set(obat.map(item => item.kategori))];
 
   if (isLoading) {
     return (
@@ -129,19 +116,6 @@ export default function LihatObatPage() {
                     />
                   </div>
                 </div>
-                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Pilih Kategori" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Semua Kategori</SelectItem>
-                    {categories.map(category => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
                 <Select value={stockFilter} onValueChange={setStockFilter}>
                   <SelectTrigger>
                     <SelectValue placeholder="Status Stok" />
@@ -168,11 +142,11 @@ export default function LihatObatPage() {
           {filteredObat.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredObat.map((item) => {
-                const stockStatus = getStockStatus(item.stok);
+                const stockStatus = getStockStatus(parseInt(item.stok));
                 const StatusIcon = stockStatus.icon;
                 
                 return (
-                  <Card key={item.id_obat} className="hover:shadow-lg transition-shadow">
+                  <Card key={item.id} className="hover:shadow-lg transition-shadow">
                     <CardContent className="p-0">
                       <img
                         src={item.foto}

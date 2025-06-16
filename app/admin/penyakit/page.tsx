@@ -1,48 +1,38 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { ProtectedRoute } from '@/components/layout/protected-route';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableHead, 
-  TableHeader, 
-  TableRow 
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from '@/components/ui/table';
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
+  AlertDialogTrigger,
   AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
 } from '@/components/ui/alert-dialog';
-import Link from 'next/link';
-import { penyakitAPI } from '@/lib/api';
-import { Heart, Plus, Search, Edit, Trash2, Info } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
+import { Heart, Plus, Search, Edit, Trash2 } from 'lucide-react';
+import { penyakitAPI, Penyakit } from '@/lib/api';
 import { useToast } from '@/hooks/use-toast';
 
-interface PenyakitData {
-  id_penyakit: number;
-  nama_penyakit: string;
-  deskripsi: string;
-  gejala: string[];
-  pencegahan: string;
-}
-
 export default function PenyakitPage() {
-  const [penyakit, setPenyakit] = useState<PenyakitData[]>([]);
-  const [filteredPenyakit, setFilteredPenyakit] = useState<PenyakitData[]>([]);
+  const [penyakit, setPenyakit] = useState<Penyakit[]>([]);
+  const [filteredPenyakit, setFilteredPenyakit] = useState<Penyakit[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -50,7 +40,7 @@ export default function PenyakitPage() {
   }, []);
 
   useEffect(() => {
-    const filtered = penyakit.filter(item =>
+    const filtered = penyakit.filter((item) =>
       item.nama_penyakit.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.deskripsi.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -63,39 +53,26 @@ export default function PenyakitPage() {
       setPenyakit(data);
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Gagal memuat data penyakit",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Gagal memuat data penyakit',
+        variant: 'destructive',
       });
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     try {
       await penyakitAPI.delete(id);
-      setPenyakit(penyakit.filter(item => item.id_penyakit !== id));
-      toast({
-        title: "Berhasil",
-        description: "Penyakit berhasil dihapus",
-      });
+      setPenyakit((prev) => prev.filter((p) => p.id !== id));
+      toast({ title: 'Berhasil', description: 'Penyakit berhasil dihapus' });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Gagal menghapus penyakit",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Gagal menghapus penyakit',
+        variant: 'destructive',
       });
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
-    );
-  }
 
   return (
     <ProtectedRoute adminOnly>
@@ -112,125 +89,119 @@ export default function PenyakitPage() {
             </p>
           </div>
 
-          <Card>
-            <CardHeader>
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">
-                <CardTitle>Daftar Penyakit ({filteredPenyakit.length})</CardTitle>
-                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-2">
-                  <div className="relative">
-                    <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
-                    <Input
-                      placeholder="Cari penyakit..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 w-full sm:w-64"
-                    />
-                  </div>
-                  <Button asChild>
-                    <Link href="/admin/penyakit/tambah" className="flex items-center">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Tambah Penyakit
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {filteredPenyakit.length > 0 ? (
-                <div className="overflow-x-auto">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Nama Penyakit</TableHead>
-                        <TableHead>Deskripsi</TableHead>
-                        <TableHead>Jumlah Gejala</TableHead>
-                        <TableHead className="text-right">Aksi</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {filteredPenyakit.map((item) => (
-                        <TableRow key={item.id_penyakit}>
-                          <TableCell className="font-medium">
-                            <div className="flex items-center space-x-2">
-                              <Heart className="h-4 w-4 text-red-600" />
-                              <span>{item.nama_penyakit}</span>
-                            </div>
-                          </TableCell>
-                          <TableCell className="max-w-md">
-                            <p className="line-clamp-2">{item.deskripsi}</p>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="secondary">
-                              {item.gejala?.length || 0} gejala
-                            </Badge>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end space-x-2">
+          {/* Search + Button */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <div className="relative w-full sm:w-64">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+              <Input
+                placeholder="Cari penyakit..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            <Button asChild>
+              <Link href="/admin/penyakit/tambah" className="flex items-center">
+                <Plus className="h-4 w-4 mr-2" />
+                Tambah Penyakit
+              </Link>
+            </Button>
+          </div>
+
+          {/* Table */}
+          {filteredPenyakit.length > 0 ? (
+            <div className="overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Nama Penyakit</TableHead>
+                    <TableHead>Deskripsi</TableHead>
+                    <TableHead>Jumlah Gejala</TableHead>
+                    <TableHead className="text-right">Aksi</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredPenyakit.map((item) => (
+                    <TableRow key={item.id}>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center space-x-2">
+                          <Heart className="h-4 w-4 text-red-600" />
+                          <span>{item.nama_penyakit}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="max-w-md">
+                        <p className="line-clamp-2">{item.deskripsi}</p>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">
+                          {item.gejala?.length || 0} gejala
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end space-x-2">
+                          <Button asChild variant="outline" size="sm">
+                            <Link href={`/admin/penyakit/edit/${item.id}`}>
+                              <Edit className="h-4 w-4" />
+                            </Link>
+                          </Button>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
                               <Button
                                 variant="outline"
                                 size="sm"
-                                asChild
+                                className="text-red-600 hover:text-red-700"
                               >
-                                <Link href={`/admin/penyakit/edit/${item.id_penyakit}`}>
-                                  <Edit className="h-4 w-4" />
-                                </Link>
+                                <Trash2 className="h-4 w-4" />
                               </Button>
-                              <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                  <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                  <AlertDialogHeader>
-                                    <AlertDialogTitle>Konfirmasi Hapus</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                      Apakah Anda yakin ingin menghapus penyakit "{item.nama_penyakit}"? 
-                                      Tindakan ini tidak dapat dibatalkan.
-                                    </AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                    <AlertDialogCancel>Batal</AlertDialogCancel>
-                                    <AlertDialogAction
-                                      onClick={() => handleDelete(item.id_penyakit)}
-                                      className="bg-red-600 hover:bg-red-700"
-                                    >
-                                      Hapus
-                                    </AlertDialogAction>
-                                  </AlertDialogFooter>
-                                </AlertDialogContent>
-                              </AlertDialog>
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              ) : (
-                <div className="text-center py-12">
-                  <Heart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    {searchTerm ? 'Penyakit tidak ditemukan' : 'Belum ada penyakit'}
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    {searchTerm 
-                      ? 'Coba ubah kata kunci pencarian Anda.'
-                      : 'Mulai dengan menambahkan penyakit baru ke database.'
-                    }
-                  </p>
-                  {!searchTerm && (
-                    <Button asChild>
-                      <Link href="/admin/penyakit/tambah">
-                        <Plus className="h-4 w-4 mr-2" />
-                        Tambah Penyakit Pertama
-                      </Link>
-                    </Button>
-                  )}
-                </div>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Konfirmasi Hapus</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  Apakah Anda yakin ingin menghapus penyakit "
+                                  {item.nama_penyakit}"? Tindakan ini tidak dapat
+                                  dibatalkan.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Batal</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDelete(item.id)}
+                                  className="bg-red-600 hover:bg-red-700"
+                                >
+                                  Hapus
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <Heart className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                {searchTerm ? 'Penyakit tidak ditemukan' : 'Belum ada penyakit'}
+              </h3>
+              <p className="text-gray-600 mb-4">
+                {searchTerm
+                  ? 'Coba ubah kata kunci pencarian Anda.'
+                  : 'Mulai dengan menambahkan penyakit baru ke database.'}
+              </p>
+              {!searchTerm && (
+                <Button asChild>
+                  <Link href="/admin/penyakit/tambah">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Tambah Penyakit Pertama
+                  </Link>
+                </Button>
               )}
-            </CardContent>
-          </Card>
+            </div>
+          )}
         </div>
       </div>
     </ProtectedRoute>

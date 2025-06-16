@@ -10,31 +10,30 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import Link from 'next/link';
-import { userAPI } from '@/lib/api';
+import { userAPI, UserData } from '@/lib/api';
 import { UserCog, ArrowLeft, Mail, User, Lock, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
-interface UserData {
-  id_user: number;
-  nama: string;
-  email: string;
-  role: string;
-}
-
 export default function EditPenggunaPage({ params }: { params: { id: string } }) {
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<{
+    nama: string;
+    email: string;
+    password: string;
+    role: 'user' | 'admin';
+  }>({
     nama: '',
     email: '',
     password: '',
     role: 'user'
   });
+
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const [error, setError] = useState('');
-  
+
   const router = useRouter();
   const { toast } = useToast();
-  const userId = parseInt(params.id);
+  const userId = params.id;
 
   useEffect(() => {
     fetchUser();
@@ -47,13 +46,13 @@ export default function EditPenggunaPage({ params }: { params: { id: string } })
         nama: user.nama,
         email: user.email,
         password: '',
-        role: user.role
+        role: user.role as 'admin' | 'user',
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Gagal memuat data pengguna",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Gagal memuat data pengguna',
+        variant: 'destructive',
       });
       router.push('/admin/pengguna');
     } finally {
@@ -67,27 +66,30 @@ export default function EditPenggunaPage({ params }: { params: { id: string } })
     setIsLoading(true);
 
     try {
-      const updateData = {
+      const updateData: Partial<UserData> = {
         nama: formData.nama,
         email: formData.email,
         role: formData.role,
-        ...(formData.password && { password: formData.password })
       };
 
+      if (formData.password) {
+        updateData.password = formData.password;
+      }
+
       await userAPI.update(userId, updateData);
-      
+
       toast({
-        title: "Berhasil",
-        description: "Data pengguna berhasil diperbarui",
+        title: 'Berhasil',
+        description: 'Data pengguna berhasil diperbarui',
       });
-      
+
       router.push('/admin/pengguna');
     } catch (error) {
       setError('Gagal memperbarui data pengguna');
       toast({
-        title: "Error",
-        description: "Gagal memperbarui data pengguna",
-        variant: "destructive",
+        title: 'Error',
+        description: 'Gagal memperbarui data pengguna',
+        variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
@@ -97,7 +99,7 @@ export default function EditPenggunaPage({ params }: { params: { id: string } })
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
@@ -127,9 +129,7 @@ export default function EditPenggunaPage({ params }: { params: { id: string } })
               <UserCog className="h-8 w-8 text-blue-600" />
               <h1 className="text-3xl font-bold text-gray-900">Edit Pengguna</h1>
             </div>
-            <p className="text-gray-600 mt-2">
-              Perbarui informasi pengguna di bawah ini
-            </p>
+            <p className="text-gray-600 mt-2">Perbarui informasi pengguna di bawah ini</p>
           </div>
 
           <Card>
@@ -194,7 +194,12 @@ export default function EditPenggunaPage({ params }: { params: { id: string } })
 
                 <div className="space-y-2">
                   <Label htmlFor="role">Role Pengguna</Label>
-                  <Select value={formData.role} onValueChange={(value) => setFormData({...formData, role: value})}>
+                  <Select
+                    value={formData.role}
+                    onValueChange={(value) =>
+                      setFormData({ ...formData, role: value as 'user' | 'admin' })
+                    }
+                  >
                     <SelectTrigger>
                       <div className="flex items-center">
                         <Shield className="h-4 w-4 mr-2 text-gray-400" />

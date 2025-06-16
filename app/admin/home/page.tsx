@@ -227,49 +227,7 @@ export default function AdminHomePage() {
               </CardHeader>
               <CardContent>
                 <Button asChild size="sm">
-                  <Link href="/admin/pilih-obat">Kelola Relasi</Link>
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                    <BarChart3 className="h-6 w-6 text-yellow-600" />
-                  </div>
-                  <div>
-                    <CardTitle>Laporan & Statistik</CardTitle>
-                    <CardDescription>
-                      Dashboard analitik sistem
-                    </CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Button size="sm" disabled>
-                  Coming Soon
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-center space-x-3">
-                  <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                    <Clock className="h-6 w-6 text-red-600" />
-                  </div>
-                  <div>
-                    <CardTitle>Sistem Backup</CardTitle>
-                    <CardDescription>
-                      Backup dan restore data
-                    </CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Button size="sm" disabled>
-                  Coming Soon
+                  <Link href="/admin/hubungan">Kelola Relasi</Link>
                 </Button>
               </CardContent>
             </Card>

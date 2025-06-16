@@ -1,9 +1,27 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  getAuth,
+  User as FirebaseUser,
+} from 'firebase/auth';
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  setDoc
+} from 'firebase/firestore';
+import { app } from '../lib/firebase'; // Pastikan path ini sesuai dengan struktur proyek Anda
+
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 interface User {
-  id_user: number;
+  id_user: string;
   email: string;
   role: 'admin' | 'user';
   nama: string;
@@ -24,86 +42,87 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for stored user session
-    const storedUser = localStorage.getItem('apotek_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setIsLoading(false);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        const userRef = doc(db, 'user', firebaseUser.uid);
+        const snap = await getDoc(userRef);
+        if (snap.exists()) {
+          const userData = snap.data();
+          const userSession: User = {
+            id_user: firebaseUser.uid,
+            email: firebaseUser.email || '',
+            role: userData.role,
+            nama: userData.nama,
+          };
+          setUser(userSession);
+          localStorage.setItem('apotek_user', JSON.stringify(userSession));
+        }
+      } else {
+        setUser(null);
+        localStorage.removeItem('apotek_user');
+      }
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     try {
-      const response = await fetch('http://localhost:5000/user');
-      const users = await response.json();
-      
-      const foundUser = users.find((u: any) => u.email === email && u.password === password);
-      
-      if (foundUser) {
-        const userSession = {
-          id_user: foundUser.id_user,
-          email: foundUser.email,
-          role: foundUser.role,
-          nama: foundUser.nama
-        };
-        setUser(userSession);
-        localStorage.setItem('apotek_user', JSON.stringify(userSession));
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Login error:', error);
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      const uid = res.user.uid;
+      const userDoc = await getDoc(doc(db, 'user', uid));
+      if (!userDoc.exists()) return false;
+
+      const data = userDoc.data();
+      const userSession: User = {
+        id_user: uid,
+        email: res.user.email || '',
+        role: data.role,
+        nama: data.nama,
+      };
+
+      setUser(userSession);
+      localStorage.setItem('apotek_user', JSON.stringify(userSession));
+      return true;
+    } catch (err) {
+      console.error('Login error:', err);
       return false;
     }
   };
 
   const register = async (email: string, password: string, nama: string): Promise<boolean> => {
     try {
-      // Check if email already exists
-      const response = await fetch('http://localhost:5000/user');
-      const users = await response.json();
-      
-      if (users.some((u: any) => u.email === email)) {
-        return false; // Email already exists
-      }
+      const res = await createUserWithEmailAndPassword(auth, email, password);
+      const uid = res.user.uid;
 
-      // Create new user
-      const newUser = {
+      const userData = {
         email,
-        password,
         nama,
         role: 'user',
-        created_at: new Date().toISOString()
+        created_at: new Date().toISOString(),
       };
 
-      const createResponse = await fetch('http://localhost:5000/user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newUser),
-      });
+      await setDoc(doc(db, 'user', uid), userData);
 
-      if (createResponse.ok) {
-        const createdUser = await createResponse.json();
-        const userSession = {
-          id_user: createdUser.id_user,
-          email: createdUser.email,
-          role: createdUser.role,
-          nama: createdUser.nama
-        };
-        setUser(userSession);
-        localStorage.setItem('apotek_user', JSON.stringify(userSession));
-        return true;
-      }
-      return false;
-    } catch (error) {
-      console.error('Register error:', error);
+      const userSession: User = {
+        id_user: uid,
+        email,
+        role: 'user',
+        nama,
+      };
+
+      setUser(userSession);
+      localStorage.setItem('apotek_user', JSON.stringify(userSession));
+      return true;
+    } catch (err) {
+      console.error('Register error:', err);
       return false;
     }
   };
 
   const logout = () => {
+    signOut(auth);
     setUser(null);
     localStorage.removeItem('apotek_user');
   };

@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Pill, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -17,8 +18,9 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  
+
   const { login } = useAuth();
+  const { toast } = useToast();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,7 +31,14 @@ export default function LoginPage() {
     try {
       const success = await login(email, password);
       if (success) {
-        router.push('/');
+        toast({
+          title: 'Berhasil masuk',
+          description: 'Anda akan diarahkan ke halaman utama...',
+        });
+
+        setTimeout(() => {
+          router.push('/');
+        }, 1500);
       } else {
         setError('Email atau password salah');
       }
@@ -43,7 +52,6 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center space-x-2 mb-4">
             <Pill className="h-10 w-10 text-blue-600" />
@@ -60,6 +68,7 @@ export default function LoginPage() {
               Masukkan email dan password Anda
             </CardDescription>
           </CardHeader>
+
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
@@ -119,15 +128,6 @@ export default function LoginPage() {
                   Daftar sekarang
                 </Link>
               </p>
-            </div>
-
-            {/* Demo Accounts */}
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <p className="text-sm font-medium text-gray-700 mb-2">Akun Demo:</p>
-              <div className="text-xs text-gray-600 space-y-1">
-                <p><strong>Admin:</strong> admin@apotek.com / admin123</p>
-                <p><strong>User:</strong> user1@apotek.com / user123</p>
-              </div>
             </div>
           </CardContent>
         </Card>

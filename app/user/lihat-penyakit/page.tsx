@@ -7,26 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { penyakitAPI, obatAPI, obatPenyakitAPI } from '@/lib/api';
+import { penyakitAPI, obatAPI, obatPenyakitAPI, Obat, Penyakit } from '@/lib/api';
 import { Heart, Search, Pill, AlertCircle, CheckCircle, Info } from 'lucide-react';
-
-interface Penyakit {
-  id_penyakit: number;
-  nama_penyakit: string;
-  deskripsi: string;
-  gejala: string[];
-  pencegahan: string;
-}
-
-interface Obat {
-  id_obat: number;
-  nama_obat: string;
-  stok: number;
-  harga: number;
-  deskripsi: string;
-  foto: string;
-  kategori: string;
-}
 
 interface PenyakitWithObat extends Penyakit {
   obat: Obat[];
@@ -46,7 +28,7 @@ export default function LihatPenyakitPage() {
     const filtered = penyakit.filter(item =>
       item.nama_penyakit.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.deskripsi.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.gejala.some(gejala => gejala.toLowerCase().includes(searchTerm.toLowerCase()))
+      item.gejala?.some(gejala => gejala.toLowerCase().includes(searchTerm.toLowerCase()))
     );
     setFilteredPenyakit(filtered);
   }, [penyakit, searchTerm]);
@@ -61,12 +43,10 @@ export default function LihatPenyakitPage() {
 
       const penyakitWithObat = penyakitData.map((p: Penyakit) => {
         const relatedObatIds = relationsData
-          .filter((rel: any) => rel.id_penyakit === p.id_penyakit)
+          .filter((rel: any) => rel.id_penyakit === p.id)
           .map((rel: any) => rel.id_obat);
-        
-        const relatedObat = obatData.filter((o: Obat) => 
-          relatedObatIds.includes(o.id_obat)
-        );
+
+        const relatedObat = obatData.filter((o: Obat) => relatedObatIds.includes(o.id))
 
         return {
           ...p,
@@ -137,7 +117,7 @@ export default function LihatPenyakitPage() {
           {filteredPenyakit.length > 0 ? (
             <div className="space-y-4">
               {filteredPenyakit.map((item) => (
-                <Card key={item.id_penyakit} className="hover:shadow-lg transition-shadow">
+                <Card key={item.id} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div>
@@ -166,11 +146,12 @@ export default function LihatPenyakitPage() {
                             <div>
                               <h4 className="font-semibold text-gray-900 mb-2">Gejala:</h4>
                               <div className="flex flex-wrap gap-2">
-                                {item.gejala.map((gejala, index) => (
+                                {item.gejala?.map((gejala, index) => (
                                   <Badge key={index} variant="secondary">
                                     {gejala}
                                   </Badge>
                                 ))}
+
                               </div>
                             </div>
 
@@ -186,15 +167,15 @@ export default function LihatPenyakitPage() {
                                 <Pill className="h-4 w-4" />
                                 <span>Obat yang Direkomendasikan:</span>
                               </h4>
-                              
+
                               {item.obat.length > 0 ? (
                                 <div className="grid md:grid-cols-2 gap-4">
                                   {item.obat.map((obat) => {
-                                    const stockStatus = getStockStatus(obat.stok);
+                                    const stockStatus = getStockStatus(parseInt(obat.stok));
                                     const StatusIcon = stockStatus.icon;
-                                    
+
                                     return (
-                                      <Card key={obat.id_obat} className="border-2 hover:border-blue-200 transition-colors">
+                                      <Card key={obat.id} className="border-2 hover:border-blue-200 transition-colors">
                                         <CardContent className="p-4">
                                           <div className="flex space-x-3">
                                             <img
@@ -238,8 +219,8 @@ export default function LihatPenyakitPage() {
                               <div className="flex items-start space-x-2">
                                 <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
                                 <div className="text-sm text-yellow-800">
-                                  <strong>Penting:</strong> Informasi ini hanya untuk referensi. 
-                                  Selalu konsultasi dengan dokter atau apoteker sebelum menggunakan obat. 
+                                  <strong>Penting:</strong> Informasi ini hanya untuk referensi.
+                                  Selalu konsultasi dengan dokter atau apoteker sebelum menggunakan obat.
                                   Penggunaan obat harus sesuai dengan resep dan petunjuk medis yang tepat.
                                 </div>
                               </div>

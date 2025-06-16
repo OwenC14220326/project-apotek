@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',
+  // Hapus output: 'export' agar Next.js pakai mode dinamis
   eslint: {
     ignoreDuringBuilds: true,
   },

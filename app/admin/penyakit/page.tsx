@@ -78,7 +78,6 @@ export default function PenyakitPage() {
     <ProtectedRoute adminOnly>
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <Heart className="h-8 w-8 text-red-600" />
@@ -89,7 +88,6 @@ export default function PenyakitPage() {
             </p>
           </div>
 
-          {/* Search + Button */}
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -108,7 +106,6 @@ export default function PenyakitPage() {
             </Button>
           </div>
 
-          {/* Table */}
           {filteredPenyakit.length > 0 ? (
             <div className="overflow-x-auto">
               <Table>

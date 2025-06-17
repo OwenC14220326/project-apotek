@@ -65,7 +65,6 @@ export default function AdminHomePage() {
     <ProtectedRoute adminOnly>
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <Shield className="h-8 w-8 text-blue-600" />
@@ -76,7 +75,6 @@ export default function AdminHomePage() {
             </p>
           </div>
 
-          {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -131,7 +129,6 @@ export default function AdminHomePage() {
             </Card>
           </div>
 
-          {/* Quick Actions */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             <Card className="hover:shadow-lg transition-shadow">
               <CardHeader>

@@ -41,7 +41,6 @@ export default function LihatObatPage() {
   const filterObat = () => {
     let filtered = obat;
 
-    // Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(item =>
         item.nama_obat.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -49,12 +48,10 @@ export default function LihatObatPage() {
       );
     }
 
-    // Filter by category
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(item => item.kategori === selectedCategory);
     }
 
-    // Filter by stock status
     if (stockFilter === 'available') {
       filtered = filtered.filter(item => parseInt(item.stok) > 0);
     } else if (stockFilter === 'low') {
@@ -84,7 +81,6 @@ export default function LihatObatPage() {
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <Pill className="h-8 w-8 text-blue-600" />
@@ -95,7 +91,6 @@ export default function LihatObatPage() {
             </p>
           </div>
 
-          {/* Filters */}
           <Card className="mb-6">
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -131,14 +126,12 @@ export default function LihatObatPage() {
             </CardContent>
           </Card>
 
-          {/* Results */}
           <div className="mb-4 flex justify-between items-center">
             <p className="text-gray-600">
               Menampilkan {filteredObat.length} obat dari {obat.length} total obat
             </p>
           </div>
 
-          {/* Medicine Grid */}
           {filteredObat.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {filteredObat.map((item) => {

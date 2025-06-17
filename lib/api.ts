@@ -99,7 +99,6 @@ import {
 import { db } from "./firebase";
 
 
-// --- TYPES (opsional, tambahkan sesuai kebutuhan)
 export interface UserData {
   id?: string;
   nama: string;
@@ -112,7 +111,7 @@ export interface UserData {
 export interface Obat {
   id?: string;
   nama_obat: string;
-  kategori?: string; // ✅ opsional, tidak wajib diisi
+  kategori?: string; 
   stok: string;
   harga: number;
   deskripsi: string;
@@ -122,7 +121,7 @@ export interface Obat {
 
 
 export interface Penyakit {
-  id: string; // ❗ ubah dari `id?: string` jika memang selalu tersedia
+  id: string; 
   nama_penyakit: string;
   deskripsi: string;
   gejala?: string[];
@@ -136,12 +135,7 @@ export interface ObatPenyakit {
   id_penyakit: string;
 }
 
-
-
-// --- COLLECTION HELPER
 const getColRef = (colName: string) => collection(db, colName);
-
-// --- API UTAMA
 
 export const userAPI = {
   async getAll() {
@@ -171,7 +165,6 @@ export const userAPI = {
   }
 };
 
-// === Lakukan hal serupa untuk `obatAPI` dan `penyakitAPI` jika dibutuhkan ===
 export const obatAPI = {
   async getAll() {
     const snapshot = await getDocs(collection(db, "obat"));

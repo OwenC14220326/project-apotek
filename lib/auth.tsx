@@ -15,7 +15,7 @@ import {
   getDoc,
   setDoc
 } from 'firebase/firestore';
-import { app } from '../lib/firebase'; // Pastikan path ini sesuai dengan struktur proyek Anda
+import { app } from '../lib/firebase'; 
 
 const auth = getAuth(app);
 const db = getFirestore(app);

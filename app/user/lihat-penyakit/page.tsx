@@ -80,7 +80,6 @@ export default function LihatPenyakitPage() {
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-4xl mx-auto">
-          {/* Header */}
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <Heart className="h-8 w-8 text-red-600" />
@@ -91,7 +90,6 @@ export default function LihatPenyakitPage() {
             </p>
           </div>
 
-          {/* Search */}
           <Card className="mb-6">
             <CardContent className="pt-6">
               <div className="relative">
@@ -106,14 +104,12 @@ export default function LihatPenyakitPage() {
             </CardContent>
           </Card>
 
-          {/* Results */}
           <div className="mb-4">
             <p className="text-gray-600">
               Menampilkan {filteredPenyakit.length} penyakit dari {penyakit.length} total penyakit
             </p>
           </div>
 
-          {/* Disease List */}
           {filteredPenyakit.length > 0 ? (
             <div className="space-y-4">
               {filteredPenyakit.map((item) => (
@@ -155,13 +151,11 @@ export default function LihatPenyakitPage() {
                               </div>
                             </div>
 
-                            {/* Prevention */}
                             <div>
                               <h4 className="font-semibold text-gray-900 mb-2">Pencegahan:</h4>
                               <p className="text-gray-600">{item.pencegahan}</p>
                             </div>
 
-                            {/* Recommended Medicines */}
                             <div>
                               <h4 className="font-semibold text-gray-900 mb-3 flex items-center space-x-2">
                                 <Pill className="h-4 w-4" />
@@ -214,7 +208,6 @@ export default function LihatPenyakitPage() {
                               )}
                             </div>
 
-                            {/* Medical Disclaimer */}
                             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
                               <div className="flex items-start space-x-2">
                                 <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />

@@ -42,7 +42,7 @@ export default function PenggunaPage() {
 
   const fetchUsers = async () => {
     try {
-      const data = await userAPI.getAll(); // Firebase version
+      const data = await userAPI.getAll(); 
       setUsers(data);
     } catch (error) {
       toast({
@@ -81,7 +81,6 @@ export default function PenggunaPage() {
     <ProtectedRoute adminOnly>
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <Users className="h-8 w-8 text-blue-600" />
@@ -90,7 +89,6 @@ export default function PenggunaPage() {
             <p className="text-gray-600">Manage semua pengguna yang terdaftar dalam sistem</p>
           </div>
 
-          {/* Card */}
           <Card>
             <CardHeader>
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center space-y-4 md:space-y-0">

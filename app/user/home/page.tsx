@@ -65,7 +65,6 @@ export default function UserHomePage() {
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-7xl mx-auto">
-          {/* Header */}
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <Stethoscope className="h-8 w-8 text-blue-600" />
@@ -76,7 +75,6 @@ export default function UserHomePage() {
             </p>
           </div>
 
-          {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -118,7 +116,6 @@ export default function UserHomePage() {
             </Card>
           </div>
 
-          {/* Main Actions */}
           <div className="grid md:grid-cols-2 gap-6 mb-8">
             <Card className="hover:shadow-lg transition-shadow cursor-pointer">
               <CardHeader>
@@ -169,7 +166,6 @@ export default function UserHomePage() {
             </Card>
           </div>
 
-          {/* Recent Medicines */}
           <Card>
             <CardHeader>
               <div className="flex items-center justify-between">
@@ -221,7 +217,6 @@ export default function UserHomePage() {
             </CardContent>
           </Card>
 
-          {/* Quick Tips */}
           <div className="mt-8 grid md:grid-cols-2 gap-6">
             <Card className="bg-gradient-to-r from-cyan-50 to-blue-50 border-cyan-200">
               <CardHeader>

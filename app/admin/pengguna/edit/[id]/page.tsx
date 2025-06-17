@@ -115,7 +115,6 @@ export default function EditPenggunaPage({ params }: { params: { id: string } })
     <ProtectedRoute adminOnly>
       <div className="min-h-screen bg-gray-50 p-6">
         <div className="max-w-2xl mx-auto">
-          {/* Header */}
           <div className="mb-8">
             <div className="flex items-center space-x-3 mb-4">
               <Button variant="outline" size="sm" asChild>

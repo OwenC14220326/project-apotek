@@ -19,7 +19,7 @@ export default function TambahObatPage() {
         harga: '',
         deskripsi: '',
         foto: '',
-        expired: '', // ✅ tambahkan ini
+        expired: '',
     });
 
 
